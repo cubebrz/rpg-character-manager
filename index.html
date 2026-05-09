@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Fichas RPG - Mestre Discord</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1><i class="fas fa-dragon"></i> Gerenciador de Fichas RPG</h1>
+            <p>Mestre Discord - Controle total dos seus jogadores</p>
+        </header>
+
+        <!-- Botões de Ação -->
+        <div class="action-buttons">
+            <button id="addCharacter" class="btn-primary">
+                <i class="fas fa-plus"></i> Novo Personagem
+            </button>
+            <button id="exportBtn" class="btn-secondary">
+                <i class="fas fa-download"></i> Exportar JSON
+            </button>
+            <input type="file" id="importFile" accept=".json" style="display: none;">
+            <button id="importBtn" class="btn-secondary">
+                <i class="fas fa-upload"></i> Importar JSON
+            </button>
+        </div>
+
+        <!-- Formulário (Escondido por padrão) -->
+        <div id="characterForm" class="form-container hidden">
+            <div class="form-header">
+                <h2 id="formTitle">Novo Personagem</h2>
+                <button id="closeForm" class="btn-close"><i class="fas fa-times"></i></button>
+            </div>
+            <form id="characterFormData">
+                <!-- Dados Básicos -->
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Foto do Personagem</label>
+                        <div class="image-upload">
+                            <img id="characterImage" src="https://via.placeholder.com/300x400/4a5568/ffffff?text=Imagem" alt="Foto">
+                            <input type="file" id="imageUpload" accept="image/*">
+                            <button type="button" id="removeImage" class="btn-remove-image hidden">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nome <span class="required">*</span></label>
+                        <input type="text" id="nome" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Gênero</label>
+                        <select id="genero">
+                            <option value="">Selecione...</option>
+                            <option value="Macho">Macho</option>
+                            <option value="Fêmea">Fêmea</option>
+                            <option value="Indefinido">Indefinido</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Idade</label>
+                        <input type="text" id="idade" placeholder="Ex: 17 anos">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Altura</label>
+                        <input type="text" id="altura" placeholder="Ex: 1,75m">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Aniversário</label>
+                        <input type="date" id="aniversario">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Ocupação</label>
+                        <input type="text" id="ocupacao" placeholder="Ex: Estudante">
+                    </div>
+                </div>
+
+                <!-- Classes e Raça -->
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Raça <span class="required">*</span></label>
+                        <input type="text" id="raca" required placeholder="Ex: Slime">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Classe <span class="required">*</span></label>
+                        <input type="text" id="classe" required placeholder="Ex: Guerreiro">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Sub-classe</label>
+                        <input type="text" id="subclasse" placeholder="Ex: Assassino">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Classe Social</label>
+                        <input type="text" id="classeSocial" placeholder="Ex: Príncipe">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Terra Natal</label>
+                        <input type="text" id="terraNatal" placeholder="Ex: Arquipélago de Azurian">
+                    </div>
+                </div>
+
+                <!-- Lore e Mochila -->
+                <div class="form-section">
+                    <label>Mochila/Equipamentos</label>
+                    <textarea id="mochila" rows="3" placeholder="Ex: Frascos químicos, Lâmina curta..."></textarea>
+                </div>
+
+                <div class="form-section">
+                    <label>Lore/Background</label>
+                    <textarea id="lore" rows="4" placeholder="História do personagem..."></textarea>
+                </div>
+
+                <div class="form-section">
+                    <label>Ponto Fraco</label>
+                    <textarea id="pontoFraco" rows="2" placeholder="Ex: Fogo, Seres não físicos"></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Salvar Personagem</button>
+                    <button type="button" id="cancelEdit" class="btn-secondary">Cancelar</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Lista de Personagens -->
+        <div class="characters-grid" id="charactersGrid">
+            <div class="empty-state">
+                <i class="fas fa-users"></i>
+                <h3>Nenhum personagem cadastrado</h3>
+                <p>Clique em "Novo Personagem" para começar</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
