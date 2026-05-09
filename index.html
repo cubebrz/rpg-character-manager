@@ -3,151 +3,715 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerenciador de Fichas RPG - Mestre Discord</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Fichas RPG - Mestre Discord</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 25px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #00d4ff, #ff00ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+        }
+
+        /* Formulário de Edição */
+        .form-container {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .form-header h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            color: #00d4ff;
+        }
+
+        .btn-close {
+            background: rgba(255, 0, 0, 0.2);
+            border: none;
+            color: #ff6b6b;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.3rem;
+            transition: all 0.3s;
+        }
+
+        .btn-close:hover {
+            background: rgba(255, 0, 0, 0.4);
+            transform: scale(1.1);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #cbd5e1;
+            font-size: 1rem;
+        }
+
+        .required {
+            color: #ff6b6b;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 15px 18px;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.07);
+            color: #e2e8f0;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #00d4ff;
+            box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.15);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .image-url-input {
+            position: relative;
+        }
+
+        .image-preview {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            margin-top: 12px;
+            background: linear-gradient(45deg, #4a5568, #2d3748);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .image-preview.valid {
+            background: none;
+            border-color: #00d4ff;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #cbd5e1;
+        }
+
+        .form-section textarea {
+            width: 100%;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 20px;
+            justify-content: flex-end;
+        }
+
+        .btn-primary, .btn-secondary {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #00d4ff, #0099cc);
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 212, 255, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Cards dos Personagens */
+        .characters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 30px;
+        }
+
+        .character-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(25px);
+            border-radius: 25px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            height: 520px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .character-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            border-color: #00d4ff;
+        }
+
+        .character-image {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            position: relative;
+        }
+
+        .character-image-placeholder {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 240px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .card-header {
+            padding: 25px;
+            background: rgba(0, 212, 255, 0.12);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .character-name {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.7rem;
+            font-weight: 800;
+            color: #00d4ff;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 10px rgba(0, 212, 255, 0.5);
+        }
+
+        .character-race-class {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .character-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 16px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+        }
+
+        .card-body {
+            padding: 25px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .character-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-label {
+            font-weight: 500;
+            color: #a0aec0;
+            font-size: 0.8rem;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            color: #e2e8f0;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .card-footer {
+            padding: 0 25px 25px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-edit, .btn-delete {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-edit {
+            background: linear-gradient(45deg, #00d4ff, #0099cc);
+            color: white;
+        }
+
+        .btn-delete {
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+            border: 2px solid rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-edit:hover, .btn-delete:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-delete:hover {
+            background: rgba(255, 107, 107, 0.4);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 40px;
+            color: #a0aec0;
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 5rem;
+            margin-bottom: 25px;
+            opacity: 0.6;
+        }
+
+        @media (max-width: 768px) {
+            .characters-grid {
+                grid-template-columns: 1fr;
+            }
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <!-- Header -->
         <header class="header">
-            <h1><i class="fas fa-dragon"></i> Gerenciador de Fichas RPG</h1>
-            <p>Mestre Discord - Controle total dos seus jogadores</p>
+            <h1><i class="fas fa-dragon"></i> Fichas RPG</h1>
         </header>
 
-        <!-- Botões de Ação -->
-        <div class="action-buttons">
-            <button id="addCharacter" class="btn-primary">
-                <i class="fas fa-plus"></i> Novo Personagem
-            </button>
-            <button id="exportBtn" class="btn-secondary">
-                <i class="fas fa-download"></i> Exportar JSON
-            </button>
-            <input type="file" id="importFile" accept=".json" style="display: none;">
-            <button id="importBtn" class="btn-secondary">
-                <i class="fas fa-upload"></i> Importar JSON
-            </button>
-        </div>
-
-        <!-- Formulário (Escondido por padrão) -->
-        <div id="characterForm" class="form-container hidden">
+        <!-- Formulário de Edição (escondido) -->
+        <div id="editForm" class="form-container hidden">
             <div class="form-header">
-                <h2 id="formTitle">Novo Personagem</h2>
+                <h2 id="formTitle">Editar Personagem</h2>
                 <button id="closeForm" class="btn-close"><i class="fas fa-times"></i></button>
             </div>
-            <form id="characterFormData">
-                <!-- Dados Básicos -->
+            <form id="editFormData">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label>Foto do Personagem</label>
-                        <div class="image-upload">
-                            <img id="characterImage" src="https://via.placeholder.com/300x400/4a5568/ffffff?text=Imagem" alt="Foto">
-                            <input type="file" id="imageUpload" accept="image/*">
-                            <button type="button" id="removeImage" class="btn-remove-image hidden">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
+                        <label>URL da Imagem</label>
+                        <input type="url" id="imageUrl" placeholder="https://exemplo.com/imagem.jpg">
+                        <img id="imagePreview" class="image-preview" src="https://via.placeholder.com/400x500/4a5568/ffffff?text=URL+da+Imagem">
                     </div>
-
                     <div class="form-group">
                         <label>Nome <span class="required">*</span></label>
                         <input type="text" id="nome" required>
                     </div>
-
                     <div class="form-group">
                         <label>Gênero</label>
                         <select id="genero">
-                            <option value="">Selecione...</option>
-                            <option value="Macho">Macho</option>
-                            <option value="Fêmea">Fêmea</option>
+                            <option value="Masculino">Macho</option>
+                            <option value="Feminino">Fêmea</option>
                             <option value="Indefinido">Indefinido</option>
                             <option value="Outro">Outro</option>
                         </select>
                     </div>
-
                     <div class="form-group">
                         <label>Idade</label>
-                        <input type="text" id="idade" placeholder="Ex: 17 anos">
+                        <input type="text" id="idade">
                     </div>
-
                     <div class="form-group">
                         <label>Altura</label>
-                        <input type="text" id="altura" placeholder="Ex: 1,75m">
+                        <input type="text" id="altura">
                     </div>
-
-                    <div class="form-group">
-                        <label>Aniversário</label>
-                        <input type="date" id="aniversario">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Ocupação</label>
-                        <input type="text" id="ocupacao" placeholder="Ex: Estudante">
-                    </div>
-                </div>
-
-                <!-- Classes e Raça -->
-                <div class="form-grid">
                     <div class="form-group">
                         <label>Raça <span class="required">*</span></label>
-                        <input type="text" id="raca" required placeholder="Ex: Slime">
+                        <input type="text" id="raca" required>
                     </div>
-
                     <div class="form-group">
                         <label>Classe <span class="required">*</span></label>
-                        <input type="text" id="classe" required placeholder="Ex: Guerreiro">
+                        <input type="text" id="classe" required>
                     </div>
+                </div>
 
+                <div class="form-grid">
                     <div class="form-group">
                         <label>Sub-classe</label>
-                        <input type="text" id="subclasse" placeholder="Ex: Assassino">
+                        <input type="text" id="subclasse">
                     </div>
-
                     <div class="form-group">
                         <label>Classe Social</label>
-                        <input type="text" id="classeSocial" placeholder="Ex: Príncipe">
+                        <input type="text" id="classeSocial">
                     </div>
-
+                    <div class="form-group">
+                        <label>Ocupação</label>
+                        <input type="text" id="ocupacao">
+                    </div>
                     <div class="form-group">
                         <label>Terra Natal</label>
-                        <input type="text" id="terraNatal" placeholder="Ex: Arquipélago de Azurian">
+                        <input type="text" id="terraNatal">
                     </div>
                 </div>
 
-                <!-- Lore e Mochila -->
                 <div class="form-section">
-                    <label>Mochila/Equipamentos</label>
-                    <textarea id="mochila" rows="3" placeholder="Ex: Frascos químicos, Lâmina curta..."></textarea>
+                    <label>Mochila</label>
+                    <textarea id="mochila" rows="3"></textarea>
                 </div>
-
-                <div class="form-section">
-                    <label>Lore/Background</label>
-                    <textarea id="lore" rows="4" placeholder="História do personagem..."></textarea>
-                </div>
-
                 <div class="form-section">
                     <label>Ponto Fraco</label>
-                    <textarea id="pontoFraco" rows="2" placeholder="Ex: Fogo, Seres não físicos"></textarea>
+                    <textarea id="pontoFraco" rows="2"></textarea>
                 </div>
 
                 <div class="form-actions">
-                    <button type="submit" class="btn-primary">Salvar Personagem</button>
-                    <button type="button" id="cancelEdit" class="btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i> Salvar Alterações
+                    </button>
+                    <button type="button" id="cancelEdit" class="btn-secondary">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
                 </div>
             </form>
         </div>
 
-        <!-- Lista de Personagens -->
-        <div class="characters-grid" id="charactersGrid">
-            <div class="empty-state">
-                <i class="fas fa-users"></i>
-                <h3>Nenhum personagem cadastrado</h3>
-                <p>Clique em "Novo Personagem" para começar</p>
-            </div>
-        </div>
+        <!-- Cards dos Personagens -->
+        <div class="characters-grid" id="charactersGrid"></div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        const characters = [
+            {
+                id: 'nyx',
+                nome: 'VX-53 // Nyx',
+                genero: 'Indefinido',
+                idade: '70-80 anos (17 aparência)',
+                altura: '1m slime / 1,75m humanoide',
+                raca: 'Slime',
+                classe: 'Cientista',
+                subclasse: 'Assassino',
+                classeSocial: 'Classe anômala',
+                ocupacao: 'Estudante Genivieve Academy / Experimento',
+                terraNatal: 'Planeta secundário - laboratórios abandonados',
+                mochila: 'Frascos químicos, Lâmina curta adaptável, Caderno selado, Fragmentos de criaturas',
+                pontoFraco: 'Fogo / ataques no núcleo',
+                image: 'https://cdn.discordapp.com/attachments/738492717885030491/1502744382762123326/BCO.0b349682-06e4-4c54-af19-c9330ec97272.png?ex=6a00d344&is=69ff81c4&hm=83edf0371a909d5c8308037d5414ec7d06b44433dbb45013f86121fd630c0f16'
+            },
+            {
+                id: 'spike',
+                nome: 'Spike',
+                genero: 'Macho',
+                idade: '17 anos',
+                altura: '5m altura / 15m comprimento',
+                raca: 'Dinossauro',
+                classe: 'Guerreiro',
+                subclasse: 'Campeão',
+                classeSocial: 'Cavaleiro',
+                ocupacao: 'Transporte aquático',
+                terraNatal: 'Arquipélago de Azurian',
+                mochila: 'Espada',
+                pontoFraco: 'Seres não físicos',
+                image: 'https://cdn.discordapp.com/attachments/738492717885030491/1502794456561090743/image.png?ex=6a0101e7&is=69ffb067&hm=f9263940c82bb9b304378da7bfe182850b16f00aba254846fdc8ac1dd1e3be24'
+            },
+            {
+                id: 'morfeus',
+                nome: 'Morfeus',
+                genero: 'Masculino',
+                idade: '100 anos (17 aparência)',
+                altura: '1,95m',
+                raca: 'Demônio (Sangue Real)',
+                classe: 'Guerreiro',
+                subclasse: 'Trapaceiro Arcano',
+                classeSocial: 'Príncipe',
+                ocupacao: 'Príncipe Regente / Comandante Elite',
+                terraNatal: 'Terra das Sombras',
+                mochila: '',
+                pontoFraco: '',
+                image: 'https://cdn.discordapp.com/attachments/738492717885030491/1502810729164705944/image.png?ex=6a01110e&is=69ffbf8e&hm=b543c0a66927386fcff90bd28c786452fcc3d3338bd0413734393450d1cab422'
+            }
+        ];
+
+        function init() {
+            loadCharacters();
+            setupEvents();
+        }
+
+        function setupEvents() {
+            document.getElementById('closeForm').onclick = hideForm;
+            document.getElementById('cancelEdit').onclick = hideForm;
+            document.getElementById('editFormData').onsubmit = saveCharacter;
+            document.getElementById('imageUrl').oninput = function(e) {
+                previewImage(e.target.value);
+            };
+        }
+
+        function loadCharacters() {
+            const grid = document.getElementById('charactersGrid');
+            grid.innerHTML = characters.map(c => `
+                <div class="character-card" data-id="${c.id}">
+                    <div class="character-image">
+                        <img src="${c.image}" alt="${c.nome}" class="character-image" 
+                             onerror="this.nextElementSibling.style.display='flex'; this.style.display='none'">
+                        <div class="character-image-placeholder" style="display:none">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    </div>
+                    <div class="card-header">
+                        <div class="character-name">${c.nome}</div>
+                        <div class="character-race-class">
+                            <span class="character-badge">${c.raca}</span>
+                            <span class="character-badge">${c.classe}</span>
+                            ${c.subclasse ? `<span class="character-badge">${c.subclasse}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="character-stats">
+                            <div class="stat-item">
+                                <div class="stat-label">Idade</div>
+                                <div class="stat-value">${c.idade}</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Altura</div>
+                                <div class="stat-value">${c.altura}</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Classe Social</div>
+                                <div class="stat-value">${c.classeSocial}</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Terra</div>
+                                <div class="stat-value">${c.terraNatal.split(' ')[0]}</div>
+                            </div>
+                        </div>
+                        ${c.pontoFraco ? `
+                            <div style="margin-top:15px;padding:15px;background:rgba(255,107,107,0.15);border-radius:12px;border-left:4px solid #ff6b6b;">
+                                <strong style="color:#ff6b6b">⚠️ Ponto Fraco:</strong> ${c.pontoFraco}
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn-edit" onclick="editCharacter('${c.id}')">
+                            <i class="fas fa-edit"></i> Editar
+                        </button>
+                        <button class="btn-delete" onclick="showDetails('${c.id}')">
+                            <i class="fas fa-eye"></i> Detalhes
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function editCharacter(id) {
+            const char = characters.find(c => c.id === id);
+            populateForm(char);
+            document.getElementById('formTitle').textContent = `Editar: ${char.nome}`;
+            document.getElementById('editForm').classList.remove('hidden');
+        }
+
+        function populateForm(char) {
+            document.getElementById('imageUrl').value = char.image;
+            document.getElementById('nome').value = char.nome;
+            document.getElementById('genero').value = char.genero;
+            document.getElementById('idade').value = char.idade;
+            document.getElementById('altura').value = char.altura;
+            document.getElementById('raca').value = char.raca;
+            document.getElementById('classe').value = char.classe;
+            document.getElementById('subclasse').value = char.subclasse || '';
+            document.getElementById('classeSocial').value = char.classeSocial;
+            document.getElementById('ocupacao').value = char.ocupacao;
+            document.getElementById('terraNatal').value = char.terraNatal;
+            document.getElementById('mochila').value = char.mochila;
+            document.getElementById('pontoFraco').value = char.pontoFraco;
+            previewImage(char.image);
+        }
+
+        function previewImage(url) {
+            const preview = document.getElementById('imagePreview');
+            if (url) {
+                preview.src = url;
+                preview.classList.add('valid');
+                preview.onerror = () => {
+                    preview.src = 'https://via.placeholder.com/400x500/4a5568/ffffff?text=URL+Inválida';
+                    preview.classList.remove('valid');
+                };
+            } else {
+                preview.classList.remove('valid');
+            }
+        }
+
+        function saveCharacter(e) {
+            e.preventDefault();
+            const id = characters.find(c => c.nome === document.getElementById('nome').value)?.id;
+            if (!id) return alert('Erro ao salvar!');
+
+            const imageUrl = document.getElementById('imageUrl').value;
+            
+            // Atualiza o personagem
+            const charIndex = characters.findIndex(c => c.id === id);
+            characters[charIndex] = {
+                ...characters[charIndex],
+                image: imageUrl,
+                nome: document.getElementById('nome').value,
+                genero: document.getElementById('genero').value,
+                idade: document.getElementById('idade').value,
+                altura: document.getElementById('altura').value,
+                raca: document.getElementById('raca').value,
+                classe: document.getElementById('classe').value,
+                subclasse: document.getElementById('subclasse').value,
+                classeSocial: document.getElementById('classeSocial').value,
+                ocupacao: document.getElementById('ocupacao').value,
+                terraNatal: document.getElementById('terraNatal').value,
+                mochila: document.getElementById('mochila').value,
+                pontoFraco: document.getElementById('pontoFraco').value
+            };
+
+            loadCharacters();
+            hideForm();
+            alert('✅ Personagem atualizado!');
+        }
+
+        function showDetails(id) {
+            const char = characters.find(c => c.id === id);
+            const details = `
+🎭 <strong>${char.nome}</strong>
+
+🧬 <strong>Raça:</strong> ${char.raca}
+⚔️ <strong>Classe:</strong> ${char.classe} ${char.subclasse ? `(${char.subclasse})` : ''}
+👤 <strong>Gênero:</strong> ${char.genero}
+📅 <strong>Idade:</strong> ${char.idade}
+📏 <strong>Altura:</strong> ${char.altura}
+🏰 <strong>Classe Social:</strong> ${char.classeSocial}
+💼 <strong>Ocupação:</strong> ${char.ocupacao}
+🌍 <strong>Terra Natal:</strong> ${char.terraNatal}
+
+🎒 <strong>Mochila:</strong> ${char.mochila || 'Nenhuma'}
+${char.pontoFraco ? `⚠️ <strong>Ponto Fraco:</strong> ${char.pontoFraco}` : ''}
+            `;
+            alert(details);
+        }
+
+        function hideForm() {
+            document.getElementById('editForm').classList.add('hidden');
+        }
+
+        // Inicializa
+        init();
+    </script>
 </body>
 </html>
